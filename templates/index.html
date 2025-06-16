@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fashion Visual Search</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(60, 72, 88, 0.12);
+            padding: 36px 32px 32px 32px;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #4f46e5;
+            margin-bottom: 28px;
+            font-weight: 700;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+        input[type="file"] {
+            border: 1px solid #c7d2fe;
+            border-radius: 6px;
+            padding: 8px;
+            background: #f1f5f9;
+            font-size: 1rem;
+        }
+        button {
+            background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+            transition: background 0.2s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .section {
+            margin-top: 24px;
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+        .item {
+            background: #f1f5f9;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(99, 102, 241, 0.07);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .item:hover {
+            box-shadow: 0 6px 24px rgba(99, 102, 241, 0.13);
+            transform: translateY(-3px) scale(1.02);
+        }
+        .item img {
+            height: 170px;
+            width: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #fff;
+            box-shadow: 0 1px 6px rgba(99, 102, 241, 0.06);
+        }
+        .item p {
+            margin: 6px 0 0 0;
+            text-align: center;
+            color: #374151;
+        }
+        .item a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .item a:hover {
+            color: #1e293b;
+            text-decoration: underline;
+        }
+        .query-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .query-section img {
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(99, 102, 241, 0.09);
+            margin-top: 10px;
+            max-height: 250px;
+        }
+        .recommendations-title {
+            margin-top: 40px;
+            text-align: center;
+            color: #4f46e5;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>👗 Fashion Visual Search</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <button type="submit">Search</button>
+        </form>
+
+        {% if query %}
+        <div class="query-section">
+            <h3>Query Image:</h3>
+            <img src="{{ query }}" alt="Query Image">
+        </div>
+        {% endif %}
+
+        {% if results %}
+        <div class="section">
+            <h3>Top Matches:</h3>
+            <div class="items-grid">
+                {% for item in results %}
+                <div class="item">
+                    <img src="{{ item.image }}" alt="Product Image">
+                    <p><strong>{{ item.name }}</strong> — {{ item.brand }}</p>
+                    <p><a href="{{ item.url }}" target="_blank">View Product</a></p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 class="recommendations-title">Recommended Items:</h3>
+            <div class="items-grid">
+                {% for item in results %}
+                    {% if item.recommendation %}
+                    <div class="item">
+                        <img src="{{ item.recommendation.image }}" alt="Recommended Item">
+                        <p><strong>{{ item.recommendation.name }}</strong> — {{ item.recommendation.brand }}</p>
+                        <p><a href="{{ item.recommendation.url }}" target="_blank">View Recommendation</a></p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
