@@ -1,12 +1,14 @@
-# Fashion_visual_search_app
+# 👗 Fashion Visual Search App
 
-👗 Fashion Visual Search & Intelligent Styling Assistant
+**AI-Powered Visual Search & Intelligent Styling Assistant**
 
 ---
 
-🏢 Industry Context
+## 🏢 Industry Context
 
-The global fashion e-commerce market loses up to **65% of potential customers** due to the inability to find specific products. Traditional text-based search fails to describe **nuanced visual details** like color gradients, patterns, textures that drive fashion decisions. This system aims to bridge that gap using visual AI.
+The global fashion e-commerce market loses up to **65% of potential customers** due to the inability to find specific products. Traditional text-based search fails to describe **nuanced visual details** like color gradients, patterns, and textures that drive fashion decisions.
+
+This system aims to bridge that gap using **Visual AI**.
 
 ---
 
@@ -14,22 +16,31 @@ The global fashion e-commerce market loses up to **65% of potential customers** 
 
 Build an end-to-end **machine learning system** that enables users to:
 
-- Upload any fashion image (from social media, camera, wardrobe, etc.)
+- Upload any fashion image (from social media, camera, or wardrobe)
 - Receive:
   - ✅ Exact or visually similar items from inventory
-  - ✅ Outfit recommendations that complement the image
+  - ✅ Outfit recommendations that complement the uploaded image
 
 ---
 
 ## 🛠️ Solution Overview
 
 This project uses:
-- **ResNet50** for image feature extraction
-- **FAISS** for real-time similarity search
-- **Flask** for the user interface
-- **CSV & image URLs** as structured product data
 
-Users can search by image and choose between categories (e.g., jeans, dresses). Results include product name, brand, image, and link.
+- 🧠 **ResNet50** for image feature extraction  
+- ⚡ **FAISS** for real-time similarity search  
+- 🌐 **Flask** for web-based UI  
+- 🗃️ **CSV & image URLs** as structured product data
+
+Users can search by image and select from categories like jeans or dresses. The results include the product name, brand, image preview, and link to product page.
+
+---
+
+## 📽️ Demo Video
+
+Watch the demo of the Fashion Visual Search App:
+
+👉 [Click here to watch the demo](https://drive.google.com/file/d/1vmyfkwSJWBFdl3iRoSd7RVq2Co8N4BmJ/view)
 
 ---
 
@@ -39,90 +50,94 @@ Users can search by image and choose between categories (e.g., jeans, dresses). 
 |-----------------------------|--------------------------------------------------------------------------|
 | Visual Similarity at Scale  | FAISS indexing + ResNet embeddings                                       |
 | Multi-Modal Understanding   | Uses metadata (brand, category) along with visual features               |
-| Style Compatibility         | Prototype includes category-based filtering and outfit extensions        |
+| Style Compatibility         | Category-based filtering + outfit extension (prototype)                  |
 | Trend Awareness             | Dynamic data loading enables fresh recommendations                       |
-| User Experience             | Mobile-friendly UI, category dropdown, drag-and-drop support             |
+| User Experience             | Mobile-friendly UI, drag & drop support, category dropdown               |
 
 ---
 
 ## 📦 Dataset Format
 
-Sample columns used:
 - `product_name`, `brand`, `description`, `category_id`, `feature_image_s3`
-- `image_embeddings.npy` — vectors extracted from ResNet50
-- `products_metadata.csv` — combined metadata for display
-- `feature_list`, `style_attributes` — can be used for future outfit scoring
+- `image_embeddings.npy` — vector database from ResNet50
+- `products_metadata.csv` — product info for UI
+- `feature_list`, `style_attributes` — optional for future enhancements
 
-----------------------------------------------------------------------------------------------------------------------------------------
+---
 
 ## ▶️ How to Run Locally
 
 1. Install Python packages:
+
 ```bash
 pip install -r requirements.txt
+```
 
 2. Start the Flask server:
 
 ```bash
 python app.py
-----
+```
 
-it will start at  http://127.0.0.1:5000
+Server will start at: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-app.py — Flask backend
+---
 
-data - raw data which was provided in the problem statement
-images - folder containing images of products of jeans
-dresses_images - folder containing images of products of dresses
-templates/index.html — Upload UI
-image_embeddings.npy — Vector database 
-products_metadata.csv — Metadata display
-requirements.txt — Python libraries
+## 📂 Project Structure
 
-------------------------------------------------------------------------------------------------------------------------------------
-🔁 System Workflow
-1. Image Upload (Frontend)
-User visits the web app (Flask UI).
-![alt text](image.png)
+| File/Folder             | Description                                         |
+|-------------------------|-----------------------------------------------------|
+| `app.py`                | Flask backend                                       |
+| `data/`                 | Raw data from the problem statement                 |
+| `images/`               | Product images (jeans)                              |
+| `dresses_images/`       | Product images (dresses)                            |
+| `templates/index.html`  | Frontend upload UI                                  |
+| `image_embeddings.npy`  | Image vector index                                  |
+| `products_metadata.csv` | Metadata for display                                |
+| `requirements.txt`      | Python dependencies                                 |
 
-Uploads a fashion image (e.g., dress, jeans, top).
-use sample image from this file to test the system sample.png
+---
 
-2. Image Preprocessing
-The image is resized to 224×224 pixels.
+## 🔁 System Workflow
 
-It's converted into a tensor and normalized using torchvision.transforms.
+1. **Image Upload (Frontend)**  
+   User uploads an image via the Flask web UI  
+   ![alt text](image.png)  
+   *(Try using the sample image: `sample.png`)*
 
-3. Feature Extraction (ResNet50)
-The image is passed through a pretrained ResNet50 model.
+2. **Image Preprocessing**  
+   Resized to 224×224, normalized, and converted into a tensor.
 
-We remove the last layer to get a 2048-dimensional vector (embedding).
+3. **Feature Extraction (ResNet50)**  
+   - Output: 2048-dim vector
+   - Captures features like color, texture, shape.
 
-This vector represents the image’s visual features: color, shape, texture, pattern.
+4. **Similarity Search (FAISS)**  
+   - Pre-indexed embeddings are searched.
+   - Returns Top 5 visually similar products using L2 distance.
 
-4. Similarity Search (FAISS)
-A FAISS index is already built using embeddings from the product dataset.
+5. **Product Matching**  
+   Each result includes:
+   - `product_name`
+   - `brand`
+   - Image URL (preview)
+   - `pdp_url` (Product Detail Page)
 
-The system compares the uploaded image’s vector with all other vectors in the index.
+6. **Display Results (Frontend)**  
+   Shows the original image and Top 5 matching products.
 
-It finds the Top 5 most visually similar products based on L2 distance.
+---
 
-5. Product Matching
-Each match includes:
+## 🔄 Regenerating Embedding Files
 
-product_name
+⚠️ The following large files are **excluded** from the repository:
 
-brand
+- `image_embeddings.npy`
+- `dresses_image_embeddings.npy`
 
-image URL (for preview)
+You can regenerate them locally by running:
 
-pdp_url (Product Detail Page)
-
-6. Output on Web UI
-The uploaded image is displayed back to the user.
-
-The system shows Top 5 similar products with image, name, and link.
-
-demo video 
-<video controls src="demo.mp4" title="Demo"></video>
+```bash
+python gen.py        # For image_embeddings.npy
+python dress.py      # For dresses_image_embeddings.npy
+```
